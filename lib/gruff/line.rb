@@ -71,7 +71,6 @@ class Gruff::Line < Gruff::Base
 
     final_point_arr = []
     @norm_data.each_with_index do |data_row, index|
-    @norm_data.each do |data_row|
       prev_x = prev_y = nil
 
       @one_point = contains_one_point_only?(data_row)
@@ -141,9 +140,6 @@ class Gruff::Line < Gruff::Base
                               1.0, 5.0,
                               p[:x] + @annotate_x_offset, p[:y] + @annotate_y_offset,
                               "$#{p[:text]}\narticles", @scale)
-    end
-      end
-
     end
 
     @d.draw(@base_image)
