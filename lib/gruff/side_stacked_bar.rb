@@ -11,13 +11,19 @@ require File.dirname(__FILE__) + '/stacked_mixin'
 class Gruff::SideStackedBar < Gruff::SideBar
   include StackedMixin
 
+
+  # Spacing factor applied between bars
+  attr_accessor :bar_spacing
+  
   def draw
     @has_left_labels = true
     get_maximum_by_stack
     super
+  end
 
-    return unless @has_data
+  protected
 
+  def draw_bars
     # Setup spacing.
     #
     # Columns sit stacked.
@@ -30,8 +36,6 @@ class Gruff::SideStackedBar < Gruff::SideBar
     padding = (@bar_width * (1 - @bar_spacing)) / 2
 
     @norm_data.each_with_index do |data_row, row_index|
-      @d = @d.fill data_row[DATA_COLOR_INDEX]
-
       data_row[DATA_VALUES_INDEX].each_with_index do |data_point, point_index|
 
     	  ## using the original calcs from the stacked bar chart to get the difference between
@@ -42,7 +46,9 @@ class Gruff::SideStackedBar < Gruff::SideBar
     	  temp2 = @graph_left + @graph_width - height[point_index] - 1
     	  difference = temp2 - temp1
 
-    	  left_x = length[point_index] #+ 1
+    	  @d = @d.fill data_row[DATA_COLOR_INDEX]
+
+        left_x = length[point_index] #+ 1
               left_y = @graph_top + (@bar_width * point_index) + padding
     	  right_x = left_x + difference
               right_y = left_y + @bar_width * @bar_spacing
@@ -61,7 +67,6 @@ class Gruff::SideStackedBar < Gruff::SideBar
     @d.draw(@base_image)    
   end
 
-  protected
 
   def larger_than_max?(data_point, index=0)
     max(data_point, index) > @maximum_value

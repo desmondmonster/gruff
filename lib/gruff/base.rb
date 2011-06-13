@@ -175,10 +175,10 @@ module Gruff
     
     # set true to display y-value of last data point next to the point itself
     attr_accessor :annotate_final_point
-    
+
     # text label to preceed final point
     attr_accessor :final_point_label
-    
+
     # change placement of @annotate_final_point text
     attr_accessor :annotate_x_offset, :annotate_y_offset
     
@@ -229,8 +229,10 @@ module Gruff
       @scale = @columns / @raw_columns
 
       vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
-      @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil   # for running locally
-#      @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
+
+      # @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil   # for running locally
+      @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
+
 
       @marker_font_size = 21.0
       @legend_font_size = 20.0
@@ -257,6 +259,7 @@ module Gruff
       @stacked = nil
       @norm_data = nil
       @annotate_final_point = []
+
       @final_point_label = ''
       @annotate_x_offset = 20
       @annotate_y_offset = 0
@@ -473,7 +476,6 @@ module Gruff
     # 
     
   
-    
     def data(name = nil, data_points, color)    # used to have data_points=[], color=nil.  removed to allow optional name argument
       data_points = Array(data_points) # make sure it's an array
       @data << [name, data_points, (color || increment_color)]
@@ -705,9 +707,9 @@ module Gruff
         @maximum_value = [@maximum_value.ceil, @y_axis_increment].max
         @minimum_value = @minimum_value.floor
         calculate_spread
-        # normalize(true)
-        normalize() # to fix y_axis_increment assignment on line chart
-          
+
+        normalize() # default to false to fix y_axis_increment assignment on line chart
+
         @marker_count = (@spread / @y_axis_increment).to_i
         @increment = @y_axis_increment
       end
@@ -786,6 +788,7 @@ module Gruff
     def draw_legend
       return if @hide_legend
 
+      # TODO use compact
       @legend_labels = @data.collect {|item| item[DATA_LABEL_INDEX]}.delete_if {|x| x.nil?}   # don't create labels if no text was passed
 
       legend_square_width = @legend_box_size # small square with color of this item
@@ -910,8 +913,7 @@ module Gruff
                                0, 10,
                                @no_data_message, @scale)
     end
-    
-    
+
     # Finds the best background to render based on the provided theme options.
     #
     # Creates a @base_image to draw on.
@@ -1115,6 +1117,7 @@ module Gruff
     # handle.
     def calculate_caps_height(font_size)
       @d.pointsize = font_size
+      @d.font = @font
       @d.get_type_metrics(@base_image, 'X').height
     end
 
@@ -1124,6 +1127,7 @@ module Gruff
     # scaling will handle.
     def calculate_width(font_size, text)
       @d.pointsize = font_size
+      @d.font = font
       @d.get_type_metrics(@base_image, text.to_s).width
     end
 

@@ -5,12 +5,21 @@ require File.dirname(__FILE__) + '/base'
 
 class Gruff::SideBar < Gruff::Base
 
+  # Spacing factor applied between bars
+  attr_accessor :bar_spacing
+  
   def draw
     @has_left_labels = true
     super
 
     return unless @has_data
 
+    draw_bars
+  end
+
+protected
+
+  def draw_bars
     # Setup spacing.
     #
     @bar_spacing ||= 0.9
@@ -21,6 +30,11 @@ class Gruff::SideBar < Gruff::Base
     height     = Array.new(@column_count, 0)
     length     = Array.new(@column_count, @graph_left)
     padding    = (@bars_width * (1 - @bar_spacing)) / 2
+    @bar_width = @bars_width / @norm_data.size
+    @d         = @d.stroke_opacity 0.0
+    height     = Array.new(@column_count, 0)
+    length     = Array.new(@column_count, @graph_left)
+    padding    = (@bar_width * (1 - @bar_spacing)) / 2
 
     @norm_data.each_with_index do |data_row, row_index|
       @d = @d.fill data_row[DATA_COLOR_INDEX]
@@ -37,7 +51,7 @@ class Gruff::SideBar < Gruff::Base
         left_x     = length[point_index] - 1
         left_y     = @graph_top + (@bars_width * point_index) + (@bar_width * row_index) + padding
         right_x    = left_x + difference
-        right_y    = left_y + @bar_width
+        right_y    = left_y + @bar_width * @bar_spacing
 
         height[point_index] += (data_point * @graph_width)
 
@@ -53,7 +67,6 @@ class Gruff::SideBar < Gruff::Base
     @d.draw(@base_image)
   end
 
-protected
 
   # Instead of base class version, draws vertical background lines and label
   def draw_line_markers
@@ -68,14 +81,14 @@ protected
     number_of_lines = 5
 
     # TODO Round maximum marker value to a round number like 100, 0.1, 0.5, etc.
-    increment = significant(@maximum_value.to_f / number_of_lines)
+    increment = significant(@spread.to_f / number_of_lines)
     (0..number_of_lines).each do |index|
 
       line_diff    = (@graph_right - @graph_left) / number_of_lines
       x            = @graph_right - (line_diff * index) - 1
       @d           = @d.line(x, @graph_bottom, x, @graph_top)
       diff         = index - number_of_lines
-      marker_label = diff.abs * increment
+      marker_label = diff.abs * increment + @minimum_value
 
       unless @hide_line_numbers
         @d.fill      = @font_color

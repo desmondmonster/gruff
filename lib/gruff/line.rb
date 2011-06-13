@@ -122,7 +122,7 @@ class Gruff::Line < Gruff::Base
     annotate_final_point(final_point_arr)
   end
 
-  # DB: write value of last data point
+  # write value of last data point
   def annotate_final_point(points)
     #- TODO print for each dataset
     #- TODO turn on/off for each dataset
@@ -142,7 +142,7 @@ class Gruff::Line < Gruff::Base
                               1.0, 5.0,
                               p[:x] + @annotate_x_offset, p[:y] + @annotate_y_offset,
                               annotation, @scale)
-    end
+      @d.draw(@base_image)
   end
 
   def normalize
