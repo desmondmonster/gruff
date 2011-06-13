@@ -1,9 +1,7 @@
 module Gruff
   module Mini
     module Legend
-      
-      attr_accessor :hide_mini_legend
-      
+
       attr_accessor :hide_mini_legend, :legend_position
 
       ##
@@ -11,12 +9,6 @@ module Gruff
 
       def expand_canvas_for_vertical_legend
         return if @hide_mini_legend
-        
-        @original_rows = @raw_rows
-        @rows += @data.length * calculate_caps_height(scale_fontsize(@legend_font_size)) * 1.7
-        render_background
-      end
-      
 
         @legend_labels = @data.collect {|item| item[Gruff::Base::DATA_LABEL_INDEX] }
 
@@ -51,9 +43,6 @@ module Gruff
 
       def draw_vertical_legend
         return if @hide_mini_legend
-        
-        @legend_labels = @data.collect {|item| item[Gruff::Base::DATA_LABEL_INDEX] }
-        
 
         legend_square_width = 40.0 # small square with color of this item
         legend_square_margin = 10.0
@@ -64,12 +53,6 @@ module Gruff
         @d.font = @font if @font
         @d.pointsize = @legend_font_size
 
-        current_x_offset = @legend_left_margin
-        current_y_offset = @original_rows + legend_top_margin
-
-        debug { @d.line 0.0, current_y_offset, @raw_columns, current_y_offset }
-
-        @legend_labels.each_with_index do |legend_label, index|        
         case @legend_position
         when :right then
           current_x_offset = @original_columns + @left_margin
@@ -90,10 +73,6 @@ module Gruff
           @d.stroke = 'transparent'
           @d.font_weight = Magick::NormalWeight
           @d.gravity = Magick::WestGravity
-          @d = @d.annotate_scaled( @base_image, 
-                            @raw_columns, 1.0,
-                            current_x_offset + (legend_square_width * 1.7), current_y_offset, 
-                            truncate_legend_label(legend_label), @scale)
           @d = @d.annotate_scaled( @base_image,
                                    @raw_columns, 1.0,
                                    current_x_offset + (legend_square_width * 1.7), current_y_offset,
@@ -102,12 +81,6 @@ module Gruff
           # Now draw box with color of this dataset
           @d = @d.stroke 'transparent'
           @d = @d.fill @data[index][Gruff::Base::DATA_COLOR_INDEX]
-          @d = @d.rectangle(current_x_offset, 
-                            current_y_offset - legend_square_width / 2.0, 
-                            current_x_offset + legend_square_width, 
-                            current_y_offset + legend_square_width / 2.0)
-          
-          current_y_offset += calculate_caps_height(@legend_font_size) * 1.7
           @d = @d.rectangle(current_x_offset,
                             current_y_offset - legend_square_width / 2.0,
                             current_x_offset + legend_square_width,
@@ -122,6 +95,7 @@ module Gruff
       # Shorten long labels so they will fit on the canvas.
       #
       #   Department of Hu...
+
       def truncate_legend_label(label)
         truncated_label = label.to_s
         while calculate_width(scale_fontsize(@legend_font_size), truncated_label) > (@columns - @legend_left_margin - @right_margin) && (truncated_label.length > 1)
@@ -129,7 +103,7 @@ module Gruff
         end
         truncated_label + (truncated_label.length < label.to_s.length ? "..." : '')
       end
-      
+
     end
   end
 end
