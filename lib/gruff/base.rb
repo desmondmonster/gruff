@@ -171,6 +171,7 @@ module Gruff
     #
     # Will be scaled down if graph is smaller than 800px wide.
     attr_accessor :legend_box_size
+<<<<<<< HEAD
     
     # set true to display y-value of last data point next to the point itself
     attr_accessor :annotate_final_point
@@ -178,6 +179,9 @@ module Gruff
     # change placement of @annotate_final_point text
     attr_accessor :annotate_x_offset, :annotate_y_offset
     
+=======
+
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
     # If one numerical argument is given, the graph is drawn at 4/3 ratio
     # according to the given width (800 results in 800x600, 400 gives 400x300,
     # etc.).
@@ -219,14 +223,22 @@ module Gruff
       @data = Array.new
       @labels = Hash.new
       @labels_seen = Hash.new
+<<<<<<< HEAD
       @sort = false
+=======
+      @sort = true
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
       @title = nil
 
       @scale = @columns / @raw_columns
 
       vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
+<<<<<<< HEAD
       # @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil
       @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
+=======
+      @font = File.exists?(vera_font_path) ? vera_font_path : nil
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
 
       @marker_font_size = 21.0
       @legend_font_size = 20.0
@@ -252,9 +264,12 @@ module Gruff
       @y_axis_increment = nil
       @stacked = nil
       @norm_data = nil
+<<<<<<< HEAD
       @annotate_final_point = []
       @annotate_x_offset = 20
       @annotate_y_offset = -20
+=======
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
     end
 
     # Sets the top, bottom, left and right margins to +margin+.
@@ -465,10 +480,13 @@ module Gruff
     #
     # Example:
     #   data("Bart S.", [95, 45, 78, 89, 88, 76], '#ffcc00')
+<<<<<<< HEAD
     # 
     
   
     
+=======
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
     def data(name, data_points=[], color=nil)
       data_points = Array(data_points) # make sure it's an array
       @data << [name, data_points, (color || increment_color)]
@@ -545,7 +563,11 @@ module Gruff
 
       normalize()
       setup_graph_measurements()
+<<<<<<< HEAD
       sort_norm_data() if @sort # Sort norm_data with avg largest values set first (for display).  must set to false to properly display annotate_final_point (requires array to stay in same order)
+=======
+      sort_norm_data() if @sort # Sort norm_data with avg largest values set first (for display)
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
 
       draw_legend()
       draw_line_markers()
@@ -570,8 +592,12 @@ module Gruff
               norm_data_points << ((data_point.to_f - @minimum_value.to_f ) / @spread)
             end
           end
+<<<<<<< HEAD
           data_row[ANNOTATE_OFFSET_INDEX] = data_row[DATA_VALUES_INDEX].keep_if{|x| x.is_a? Integer}.last.to_s   # max of data points
           @norm_data << [data_row[DATA_LABEL_INDEX], norm_data_points, data_row[DATA_COLOR_INDEX], data_row[ANNOTATE_OFFSET_INDEX]]
+=======
+          @norm_data << [data_row[DATA_LABEL_INDEX], norm_data_points, data_row[DATA_COLOR_INDEX]]
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
         end
       end
     end
@@ -700,9 +726,14 @@ module Gruff
         @maximum_value = [@maximum_value.ceil, @y_axis_increment].max
         @minimum_value = @minimum_value.floor
         calculate_spread
+<<<<<<< HEAD
         # normalize(true)
         normalize() # to fix y_axis_increment assignment on line chart
           
+=======
+        normalize(true)
+
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
         @marker_count = (@spread / @y_axis_increment).to_i
         @increment = @y_axis_increment
       end
@@ -905,8 +936,12 @@ module Gruff
                                0, 10,
                                @no_data_message, @scale)
     end
+<<<<<<< HEAD
     
     
+=======
+
+>>>>>>> 79c4e2d36b3fec61bc6769ba4399b8c0878401b1
     # Finds the best background to render based on the provided theme options.
     #
     # Creates a @base_image to draw on.
@@ -1103,6 +1138,7 @@ module Gruff
     # handle.
     def calculate_caps_height(font_size)
       @d.pointsize = font_size
+      @d.font = @font
       @d.get_type_metrics(@base_image, 'X').height
     end
 
@@ -1112,6 +1148,7 @@ module Gruff
     # scaling will handle.
     def calculate_width(font_size, text)
       @d.pointsize = font_size
+      @d.font = font
       @d.get_type_metrics(@base_image, text.to_s).width
     end
 

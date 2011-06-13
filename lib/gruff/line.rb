@@ -71,6 +71,7 @@ class Gruff::Line < Gruff::Base
 
     final_point_arr = []
     @norm_data.each_with_index do |data_row, index|
+    @norm_data.each do |data_row|
       prev_x = prev_y = nil
 
       @one_point = contains_one_point_only?(data_row)
@@ -121,7 +122,7 @@ class Gruff::Line < Gruff::Base
     annotate_final_point(final_point_arr)
   end
 
-  # DB: write value of last data point
+  # write value of last data point
   def annotate_final_point(points)
     #- TODO print for each dataset
     #- TODO turn on/off for each dataset
@@ -141,6 +142,11 @@ class Gruff::Line < Gruff::Base
                               p[:x] + @annotate_x_offset, p[:y] + @annotate_y_offset,
                               "$#{p[:text]}\narticles", @scale)
     end
+      end
+
+    end
+
+    @d.draw(@base_image)
   end
 
   def normalize
