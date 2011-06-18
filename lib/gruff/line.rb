@@ -143,6 +143,7 @@ class Gruff::Line < Gruff::Base
                               p[:x] + @annotate_x_offset, p[:y] + @annotate_y_offset,
                               annotation, @scale)
       @d.draw(@base_image)
+    end
   end
 
   def normalize
