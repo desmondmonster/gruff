@@ -228,7 +228,7 @@ module Gruff
 
       @scale = @columns / @raw_columns
 
-      vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
+      # vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
 
       # @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil   # for running locally
       @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
