@@ -228,10 +228,11 @@ module Gruff
 
       @scale = @columns / @raw_columns
 
-      # vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
-
-      # @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil   # for running locally
-      @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
+      # uncomment following two lines when using outside of Rails
+      vera_font_path = File.expand_path('Vera.ttf', ENV['MAGICK_FONT_PATH'])
+      @font = File.exists?(vera_font_path) ? vera_font_path : '/Library/Fonts/Microsoft/Perpetua.ttf' # : nil   # for running locally
+      # uncomment for Rails.  You probably won't do this since we can't install system gems (cf RMagick) in production
+      # @font = File.expand_path('/public/fonts/Perpetua.ttf', RAILS_ROOT)
 
 
       @marker_font_size = 21.0
